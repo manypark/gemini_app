@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gemini_app/features/home/presentation/screen/basic_prompt/basic_prompt_screen.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:gemini_app/features/home/presentation/screen/basic_prompt/basic_prompt_screen.dart';
 
 class HomeScreen extends StatelessWidget {
 
