@@ -4,7 +4,10 @@
         {
             "name": "gemini_app",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+             "env": {
+                "PATH": "/Users/manu/.rbenv/shims:/Users/manu/.rbenv/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/manu/Development/flutter/bin"
+            }
         },
         {
             "name": "gemini_app (profile mode)",

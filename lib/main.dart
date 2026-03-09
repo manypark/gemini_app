@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      debugShowMaterialGrid : false,
+      debugShowCheckedModeBanner : false,
       routerConfig          : appRouter,
       theme                 : AppTheme(isDarkMode: true).getTheme(),
     );
