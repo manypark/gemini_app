@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:gemini_app/features/home/presentation/chat/chat.dart';
 import 'package:gemini_app/features/home/presentation/providers/providers.dart';
-import 'package:uuid/uuid.dart';
 
 class BasicPromptScreen extends StatelessWidget {
 
@@ -20,23 +19,23 @@ class BasicPromptScreen extends StatelessWidget {
       appBar: AppBar( title: const Text('Prompt basico'),),
       body  : Consumer(
         builder: (context, ref, child) {
-
-          final userGemini = ref.watch( geminiUserProvider );
+          
           final isGeminiWriting = ref.watch(isGeminiWritingProvider);
 
-          final messages = <types.Message>[
-            types.TextMessage(author: userGemini, id: Uuid().v4(), text: 'Hola que hace X2'),
-          ];
-
           return Chat(
-            messages        : messages,
-            onSendPressed   : ( types.PartialText partialText) {}, 
+            messages        : ref.watch( basicChatProvider ),
+            onSendPressed   : ( types.PartialText partialText) {
+              ref.read(basicChatProvider.notifier).addMessage(
+                partialText : partialText, 
+                user        : ref.read( normalUserProvider ),
+              );
+            },
             user            : ref.watch( normalUserProvider ),
             theme           : DarkChatTheme(),
             showUserAvatars : true,
             showUserNames   : true,
             typingIndicatorOptions: TypingIndicatorOptions(
-              typingUsers: isGeminiWriting ? [ userGemini ] : [],
+              typingUsers: isGeminiWriting ? [ ref.watch( geminiUserProvider ) ] : [],
             ),
           );
         },
