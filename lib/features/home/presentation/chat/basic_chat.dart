@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,14 +22,30 @@ class BasicChat extends _$BasicChat {
   void addMessage({
     required PartialText partialText,
     required User user,
+    List<XFile> images = const [],
   }) {
-
+    if(images.isNotEmpty) {
+      _addTextMessagewithImages( partialText, user, images );
+      return;
+    }
     _addTextMessage( partialText, user );
   }
 
   void _addTextMessage( PartialText partialText, User user ) {
     _createTextMessage( partialText.text, user );
     _geminiTextResponseStream( partialText.text );
+  }
+
+  void _addTextMessagewithImages( PartialText partialText, User user, List<XFile> images ) async {
+
+    for ( XFile image in images) {
+      _createImageMessage( image, user );
+    }
+
+    await Future.delayed( Duration( milliseconds: 10 ) );
+    
+    _createTextMessage( partialText.text, user );
+    _geminiTextResponseStream( partialText.text, images:images );
   }
 
   void _geminiTextResponse( String prompt ) async {
@@ -38,10 +55,10 @@ class BasicChat extends _$BasicChat {
     _createTextMessage( textResponse, ref.read( geminiUserProvider ) );
   }
 
-  void _geminiTextResponseStream( String prompt ) async {
+  void _geminiTextResponseStream( String prompt, {List<XFile> images = const []}) async {
     _createTextMessage( 'Gemini esta pensando...', ref.read( geminiUserProvider ) );
 
-    gemini.getResponseStream(prompt).listen( (responseChunk) {
+    gemini.getResponseStream(prompt, files:images).listen( (responseChunk) {
       if( responseChunk.isEmpty ) return;
 
       final updatedMessages = [ ...state ];
@@ -71,4 +88,16 @@ class BasicChat extends _$BasicChat {
     state = [ message, ...state ];
   }
 
+  void _createImageMessage( XFile image, User author ) async {
+    final message = ImageMessage(
+      id        : Uuid().v4(), 
+      author    : author,
+      createdAt : DateTime.now().millisecondsSinceEpoch,
+      uri: image.path,
+      name: image.name,
+      size: await image.length()
+    );
+
+    state = [ message, ...state ];
+  }
 }
