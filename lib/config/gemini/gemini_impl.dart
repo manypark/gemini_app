@@ -45,4 +45,33 @@ class GeminiImpl {
       }
     }
 
+    Stream<String> getChstResponseStream( String prompt, String chatId, { List<XFile> files = const [] } ) async* {
+
+      final formData = FormData();
+
+      formData.fields.add( MapEntry('prompt', prompt) );
+      formData.fields.add( MapEntry('chatId', chatId) );
+
+      if (files.isNotEmpty) {
+        for (final file in files) {
+          formData.files.add( MapEntry( 'files', await MultipartFile.fromFile(file.path, filename: file.name), ), );
+        }
+      }
+      
+      final response = await _http.post(
+        '/chat-stream',
+        data    : formData,
+        options : Options( responseType: ResponseType.stream)
+      );
+
+      final stream = response.data.stream as Stream<List<int>>;
+      String buffer = '';
+
+      await for( final chunk in stream ) {
+        final chunkString = utf8.decode( chunk, allowMalformed:true );
+        buffer += chunkString;
+        yield buffer;
+      }
+    }
+
 }
