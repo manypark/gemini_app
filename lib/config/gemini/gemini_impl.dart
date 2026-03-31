@@ -18,39 +18,35 @@ class GeminiImpl {
     }
 
     Stream<String> getResponseStream( String prompt, { List<XFile> files = const [] } ) async* {
-
-      final formData = FormData();
-
-      formData.fields.add( MapEntry('prompt', prompt) );
-
-      if (files.isNotEmpty) {
-        for (final file in files) {
-          formData.files.add( MapEntry( 'files', await MultipartFile.fromFile(file.path, filename: file.name), ), );
-        }
-      }
-      
-      final response = await _http.post(
-        '/basic-prompt-stream',
-        data    : formData,
-        options : Options( responseType: ResponseType.stream)
+      yield* _getStreamResponse(
+        prompt    : prompt, 
+        endpoint  : '/basic-prompt-stream',
+        files     : files,
       );
-
-      final stream = response.data.stream as Stream<List<int>>;
-      String buffer = '';
-
-      await for( final chunk in stream ) {
-        final chunkString = utf8.decode( chunk, allowMalformed:true );
-        buffer += chunkString;
-        yield buffer;
-      }
     }
 
     Stream<String> getChstResponseStream( String prompt, String chatId, { List<XFile> files = const [] } ) async* {
+      yield* _getStreamResponse(
+        prompt    : prompt, 
+        endpoint  : '/chat-stream',
+        files     : files,
+        formFields: { 'chatId' : chatId },
+      );
+    }
+
+    // Emitir sl tream de informacion
+    Stream<String> _getStreamResponse({ 
+      required String prompt, 
+      required String endpoint,
+      List<XFile> files = const [],
+      Map<String, dynamic> formFields = const {},
+    }) async* {
 
       final formData = FormData();
-
-      formData.fields.add( MapEntry('prompt', prompt) );
-      formData.fields.add( MapEntry('chatId', chatId) );
+      formData.fields.add( MapEntry( 'prompt', prompt ) );
+      for( final entry in formFields.entries ) {
+        formData.fields.add( MapEntry( entry.key, entry.value ) );
+      }
 
       if (files.isNotEmpty) {
         for (final file in files) {
@@ -59,7 +55,7 @@ class GeminiImpl {
       }
       
       final response = await _http.post(
-        '/chat-stream',
+        endpoint,
         data    : formData,
         options : Options( responseType: ResponseType.stream)
       );

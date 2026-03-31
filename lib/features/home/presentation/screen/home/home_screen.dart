@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gemini_app/features/home/presentation/screen/chat_context/chat_context_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:gemini_app/features/home/presentation/screen/basic_prompt/basic_prompt_screen.dart';
@@ -12,9 +13,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( title: const Text('Home Screen'),),
+      appBar: AppBar( 
+        title   : const Text('Home Screen'),
+      ),
       body  : ListView(
         children: [
+
           ListTile(
             leading: const CircleAvatar(
               backgroundColor: Colors.pink,
@@ -23,6 +27,16 @@ class HomeScreen extends StatelessWidget {
             title   : const Text('Prompt básico a Gemini'),
             subtitle: const Text('Usando el modelo flash'),
             onTap   : () => context.push( BasicPromptScreen.path ),
+          ),
+
+          ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: Colors.deepPurple,
+              child: Icon( Icons.percent_outlined ),
+            ),
+            title   : const Text('Chat conversacional'),
+            subtitle: const Text('Mantener el contexto de mensajes'),
+            onTap   : () => context.push( ChatContextScreen.path ),
           )
         ],
       )
