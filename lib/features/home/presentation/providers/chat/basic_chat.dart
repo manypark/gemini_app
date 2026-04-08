@@ -4,7 +4,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:gemini_app/config/gemini/gemini_impl.dart';
-import 'package:gemini_app/features/home/presentation/chat/chat.dart';
+import 'package:gemini_app/features/home/presentation/providers/chat/chat.dart';
 import 'package:gemini_app/features/home/presentation/providers/user_providers.dart';
 
 part 'basic_chat.g.dart';
