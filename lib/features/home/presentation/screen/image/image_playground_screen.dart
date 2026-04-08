@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gemini_app/features/home/presentation/providers/images/images.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:gemini_app/config/config.dart';
 import 'package:gemini_app/features/home/presentation/widgets/chat/chat.dart';
@@ -29,30 +31,37 @@ class ImagePlaygroundScreen extends StatelessWidget {
       backgroundColor: colorSeed,
       body: Column(
         children: [
+
           // Espacio para imágenes generadas
           GeneratedImageGallery(),
 
           // Selector de estilo de arte
           ArtStyleSelector(),
+
           // Llenar el espacio
           Expanded(child: Container()),
+
           // Espacio para el prompt
           CustomBottomInput(
-            onSend: (p0, {List<XFile> images = const []}) {
-              // Todo:
-            },
+            onSend: (p0, {List<XFile> images = const []}) {},
           ),
+
         ],
       ),
     );
   }
 }
 
-class GeneratedImageGallery extends StatelessWidget {
+class GeneratedImageGallery extends ConsumerWidget {
+
   const GeneratedImageGallery({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build( BuildContext context, ref ) {
+
+    final isGenerating    = ref.watch( isGeneratingProvider );
+    final generatedImages = ref.watch( generatedImagesProvider );
+
     return SizedBox(
       height: 250,
       child: PageView(
@@ -63,18 +72,17 @@ class GeneratedImageGallery extends StatelessWidget {
         padEnds: true, // Cambiado a true para centrar la primera imagen
         children: [
           //* Placeholder hasta que se genere al menos una imagen
+          if( generatedImages.isEmpty && !isGenerating )
           const EmptyPlaceholderImage(),
-          const GeneratingPlaceholderImage(),
 
           //* Aquí iremos colocando las imágenes generadas
-          GeneratedImage(
-            imageUrl:
-                'https://www.theclickcommunity.com/blog/wp-content/uploads/2018/04/woman-with-red-hair-outside-by-Cassandra-Casley.jpg',
+          ...generatedImages.map( ( imgUrl ) => GeneratedImage(
+              imageUrl : imgUrl,
+            ),
           ),
-          GeneratedImage(
-            imageUrl:
-                'https://www.theclickcommunity.com/blog/wp-content/uploads/2018/04/woman-with-red-hair-outside-by-Cassandra-Casley.jpg',
-          ),
+
+          if( isGenerating )
+          const GeneratingPlaceholderImage(),
         ],
       ),
     );

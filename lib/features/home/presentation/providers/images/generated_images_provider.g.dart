@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'is_generating_provider.dart';
+part of 'generated_images_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,50 +9,51 @@ part of 'is_generating_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(IsGenerating)
-final isGeneratingProvider = IsGeneratingProvider._();
+@ProviderFor(GeneratedImages)
+final generatedImagesProvider = GeneratedImagesProvider._();
 
-final class IsGeneratingProvider extends $NotifierProvider<IsGenerating, bool> {
-  IsGeneratingProvider._()
+final class GeneratedImagesProvider
+    extends $NotifierProvider<GeneratedImages, List<String>> {
+  GeneratedImagesProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'isGeneratingProvider',
+        name: r'generatedImagesProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$isGeneratingHash();
+  String debugGetCreateSourceHash() => _$generatedImagesHash();
 
   @$internal
   @override
-  IsGenerating create() => IsGenerating();
+  GeneratedImages create() => GeneratedImages();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
+  Override overrideWithValue(List<String> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
+      providerOverride: $SyncValueProvider<List<String>>(value),
     );
   }
 }
 
-String _$isGeneratingHash() => r'4badd18a5979dedef022b298c72fe10449eb251f';
+String _$generatedImagesHash() => r'47c4f747f74db046c5223714707b32cd2998091e';
 
-abstract class _$IsGenerating extends $Notifier<bool> {
-  bool build();
+abstract class _$GeneratedImages extends $Notifier<List<String>> {
+  List<String> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<bool, bool>;
+    final ref = this.ref as $Ref<List<String>, List<String>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
               Object?,
               Object?
             >;
