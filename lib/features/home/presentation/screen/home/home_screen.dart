@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gemini_app/features/home/presentation/screen/chat_context/chat_context_screen.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:gemini_app/features/home/presentation/screen/image/image_playground_screen.dart';
+import 'package:gemini_app/features/home/presentation/screen/chat_context/chat_context_screen.dart';
 import 'package:gemini_app/features/home/presentation/screen/basic_prompt/basic_prompt_screen.dart';
+
 
 class HomeScreen extends StatelessWidget {
 
@@ -37,7 +39,17 @@ class HomeScreen extends StatelessWidget {
             title   : const Text('Chat conversacional'),
             subtitle: const Text('Mantener el contexto de mensajes'),
             onTap   : () => context.push( ChatContextScreen.path ),
-          )
+          ),
+
+          ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: Colors.yellowAccent,
+              child: Icon( Icons.image ),
+            ),
+            title   : const Text('Generacion de imágenes'),
+            subtitle: const Text('Crea y edita imagenes con IA'),
+            onTap   : () => context.push( ImagePlaygroundScreen.path ),
+          ),
         ],
       )
     );

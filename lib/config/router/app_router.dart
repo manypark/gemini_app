@@ -7,5 +7,6 @@ final appRouter =  GoRouter(
     homeRoute,
     basicPromptRoute,
     chatContexttRoute,
+    imagePlaygroundRoute,
   ]
 );
