@@ -6,7 +6,7 @@ part 'selected_art_provider.g.dart';
 class SelectedArt extends _$SelectedArt {
 
   @override
-  build() => '';
+  String build() => '';
 
   void setSelectedArt( String art ) {
     if( state == art ) {

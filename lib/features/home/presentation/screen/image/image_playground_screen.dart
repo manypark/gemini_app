@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gemini_app/features/home/presentation/providers/images/images.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:gemini_app/config/config.dart';
 import 'package:gemini_app/features/home/presentation/widgets/chat/chat.dart';
+import 'package:gemini_app/features/home/presentation/providers/images/images.dart';
 
 const imageArtStyles = [
   'Realista',
@@ -25,7 +25,7 @@ class ImagePlaygroundScreen extends StatelessWidget {
   const ImagePlaygroundScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build( BuildContext context ) {
     return Scaffold(
       appBar: AppBar(title: Text('Imágenes con Gemini')),
       backgroundColor: colorSeed,
@@ -42,10 +42,18 @@ class ImagePlaygroundScreen extends StatelessWidget {
           Expanded(child: Container()),
 
           // Espacio para el prompt
-          CustomBottomInput(
-            onSend: (p0, {List<XFile> images = const []}) {},
-          ),
+          Consumer( builder: (context, ref, child) => CustomBottomInput( onSend: ( partialText, {List<XFile> images = const []}) async {
 
+                final generatedImagesNotifier = ref.read( generatedImagesProvider.notifier);
+                final selectedStyle = ref.read( selectedArtProvider );
+                String promptWithStyle = partialText.text;
+
+                if( selectedStyle.isNotEmpty ) promptWithStyle = '${partialText.text} con el estilo de $selectedStyle';
+
+                generatedImagesNotifier.generatedImage( promptWithStyle, images : images );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -65,6 +73,11 @@ class GeneratedImageGallery extends ConsumerWidget {
     return SizedBox(
       height: 250,
       child: PageView(
+        onPageChanged: (index) {
+          if (index == generatedImages.length - 1 ) {
+            ref.read( generatedImagesProvider.notifier ).generatedImageWithPreviousPrompt();
+          }
+        },
         controller: PageController(
           viewportFraction: 0.6, // Muestra 1.5 imágenes en la pantalla
           initialPage: 0,
@@ -121,23 +134,35 @@ class GeneratedImage extends StatelessWidget {
 }
 
 class ArtStyleSelector extends StatelessWidget {
+
   const ArtStyleSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: imageArtStyles.length,
-        itemBuilder: (context, index) {
-          final style = imageArtStyles[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Chip(
-              label: Text(style),
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            ),
+      child : Consumer( builder: (context, ref, child) {
+        return  ListView.builder(
+          scrollDirection : Axis.horizontal,
+          itemCount       : imageArtStyles.length,
+          itemBuilder     : (context, index) {
+              final selectedArt = ref.watch( selectedArtProvider );
+              final style = imageArtStyles[index];
+              final activeColor = selectedArt == style ? Theme.of(context).colorScheme.primaryContainer : null;
+          
+              return GestureDetector(
+                onTap: () {
+                  ref.read( selectedArtProvider.notifier ).setSelectedArt( style );
+                },
+                child: Padding(
+                  padding : const EdgeInsets.symmetric(horizontal: 4.0),
+                  child   : Chip(
+                    label           : Text(style),
+                    backgroundColor : activeColor,
+                    ),
+                  ),
+              );
+            },
           );
         },
       ),

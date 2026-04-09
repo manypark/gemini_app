@@ -12,8 +12,7 @@ part of 'selected_art_provider.dart';
 @ProviderFor(SelectedArt)
 final selectedArtProvider = SelectedArtProvider._();
 
-final class SelectedArtProvider
-    extends $NotifierProvider<SelectedArt, dynamic> {
+final class SelectedArtProvider extends $NotifierProvider<SelectedArt, String> {
   SelectedArtProvider._()
     : super(
         from: null,
@@ -33,27 +32,27 @@ final class SelectedArtProvider
   SelectedArt create() => SelectedArt();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(dynamic value) {
+  Override overrideWithValue(String value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<dynamic>(value),
+      providerOverride: $SyncValueProvider<String>(value),
     );
   }
 }
 
-String _$selectedArtHash() => r'59509ceaa1b69af63a4a58db5dfc19de72e924af';
+String _$selectedArtHash() => r'532814f032350e171169f52459cbaa514a8905cc';
 
-abstract class _$SelectedArt extends $Notifier<dynamic> {
-  dynamic build();
+abstract class _$SelectedArt extends $Notifier<String> {
+  String build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<dynamic, dynamic>;
+    final ref = this.ref as $Ref<String, String>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<dynamic, dynamic>,
-              dynamic,
+              AnyNotifier<String, String>,
+              String,
               Object?,
               Object?
             >;
