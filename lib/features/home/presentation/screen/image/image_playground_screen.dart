@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gemini_app/features/home/presentation/widgets/image/history_grid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,7 +40,10 @@ class ImagePlaygroundScreen extends StatelessWidget {
           ArtStyleSelector(),
 
           // Llenar el espacio
-          Expanded(child: Container()),
+          Expanded( child : Padding(
+            padding : const EdgeInsets.all(8),
+            child   : HistoryGrid(),
+          ) ),
 
           // Espacio para el prompt
           Consumer( builder: (context, ref, child) => CustomBottomInput( onSend: ( partialText, {List<XFile> images = const []}) async {
