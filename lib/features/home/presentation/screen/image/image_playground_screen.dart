@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gemini_app/features/home/presentation/providers/images/selected_image/selected_image_provider.dart';
 import 'package:gemini_app/features/home/presentation/widgets/image/history_grid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,10 +47,16 @@ class ImagePlaygroundScreen extends StatelessWidget {
           ) ),
 
           // Espacio para el prompt
-          Consumer( builder: (context, ref, child) => CustomBottomInput( onSend: ( partialText, {List<XFile> images = const []}) async {
+          Consumer( builder: (context, ref, child) => CustomBottomInput( onSend: ( partialText, {List<XFile> images = const [] } ) async {
 
                 final generatedImagesNotifier = ref.read( generatedImagesProvider.notifier);
                 final selectedStyle = ref.read( selectedArtProvider );
+                final selectedImage = await ref.read( selectedImageProvider.notifier ).getXFile();
+
+                if( selectedImage != null ) {
+                  images.add(selectedImage);
+                }
+                
                 String promptWithStyle = partialText.text;
 
                 if( selectedStyle.isNotEmpty ) promptWithStyle = '${partialText.text} con el estilo de $selectedStyle';

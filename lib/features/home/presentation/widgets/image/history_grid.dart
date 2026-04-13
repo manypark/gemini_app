@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gemini_app/features/home/presentation/providers/images/images.dart';
+import 'package:gemini_app/features/home/presentation/providers/images/selected_image/selected_image_provider.dart';
 
 class HistoryGrid extends ConsumerWidget {
 
@@ -8,7 +9,8 @@ class HistoryGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final generatedHistory = ref.watch( generatingHistoryProvider );
+    final generatedHistory  = ref.watch( generatingHistoryProvider );
+    final selectedImage     = ref.watch( selectedImageProvider );
 
     return GridView.builder(
       itemCount   : generatedHistory.length,
@@ -24,13 +26,16 @@ class HistoryGrid extends ConsumerWidget {
 
         return GestureDetector(
           onTap: () {
-            
+            ref.read( selectedImageProvider.notifier ).setSelectedImage(imageUrl);
           },
           child: Container(
             width     : 100,
             height    : 100,
             decoration: BoxDecoration(
-              border      : Border.all( width : 1, color : Colors.blue),
+              border      : Border.all( 
+                width : selectedImage == imageUrl ? 4 : 0, 
+                color : selectedImage == imageUrl ? Colors.blue : Colors.grey
+              ),
               borderRadius: BorderRadius.circular( 10 ),
               image       : DecorationImage(
                 image : NetworkImage(imageUrl),

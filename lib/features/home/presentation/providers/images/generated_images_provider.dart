@@ -18,7 +18,6 @@ class GeneratedImages extends _$GeneratedImages {
   List<String> build() => [];
 
   void addImage( String imageUrl ) {
-    if(ref.mounted) return;
     if( imageUrl == '' ) return;
     ref.read( generatingHistoryProvider.notifier ).addImage(imageUrl);
     state = [ ...state, imageUrl ];
